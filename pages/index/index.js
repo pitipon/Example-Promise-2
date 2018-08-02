@@ -7,14 +7,11 @@ Page({
     var itemId = 5
     this.myPromise(itemId)
                   .then((x) => {
-                    console.log(x)
-                    if(x.purchase == "success") {
-                        wx.showToast({
-                          title: `Purchase SUCCESS!!`,
-                          icon: 'success',
-                          duration: 3000
-                        })
-                    }
+                    // Action: show success pop-up .. if status is success
+                    wx.showToast({ title: `Purchase SUCCESS!!`, icon: 'success', duration: 3000 }) 
+                  })
+                  .catch((err) => {
+                    wx.showToast({ title: err, icon: 'none', duration: 3000 }) 
                   })
   },
 
@@ -24,8 +21,12 @@ Page({
       // and return details of item
       // but, we need to wait for 3 seconds
       setTimeout((params) => {
-        var responseFromApi = { name: "Salmon", price: 30, purchase: "success" }
-        resolve(responseFromApi)
+        var responseFromApi = { name: "Salmon", price: 30, purchase: "fail" }
+        if (responseFromApi.purchase == "success") {
+          resolve(responseFromApi)
+        } else {
+          reject("Fail Purchase from server")
+        }
       }, 3000)
     })
   }
